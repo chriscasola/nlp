@@ -10,15 +10,15 @@ type CRFFeatureFunction func(s []string, i int, labelCurr string, labelPrev stri
 
 // CRFFeature includes the weight and feature function for a CRF feature
 type CRFFeature struct {
-	weight float64
-	value  CRFFeatureFunction
+	Weight float64
+	Value  CRFFeatureFunction
 }
 
 // CRFSentenceLabeling is a specific order of labels for a sentence
 type CRFSentenceLabeling struct {
-	labels      []string
-	score       float64
-	probability float64
+	Labels      []string
+	Score       float64
+	Probability float64
 }
 
 // CRFSentence is a sentence to be processed using CRF
@@ -40,9 +40,9 @@ func (s *CRFSentence) ScoreLabeling(labeling *CRFSentenceLabeling) float64 {
 	for _, feature := range s.features {
 		for i := range s.words {
 			if i == 0 {
-				score += (feature.weight * feature.value(s.words, i, labeling.labels[i], ""))
+				score += (feature.Weight * feature.Value(s.words, i, labeling.Labels[i], ""))
 			} else {
-				score += (feature.weight * feature.value(s.words, i, labeling.labels[i], labeling.labels[i-1]))
+				score += (feature.Weight * feature.Value(s.words, i, labeling.Labels[i], labeling.Labels[i-1]))
 			}
 		}
 	}
@@ -53,7 +53,7 @@ func (s *CRFSentence) ScoreLabeling(labeling *CRFSentenceLabeling) float64 {
 func recursivelyLabelWord(words []string, allLabels []string, appliedLabels []string) []CRFSentenceLabeling {
 	var result []CRFSentenceLabeling
 	if len(words) == len(appliedLabels) {
-		result = append(result, CRFSentenceLabeling{labels: appliedLabels})
+		result = append(result, CRFSentenceLabeling{Labels: appliedLabels})
 		return result
 	}
 
@@ -86,7 +86,7 @@ func (s *CRFSentence) scoreAllLabelings() []CRFSentenceLabeling {
 	labelings := getAllPossibleLabelings(s.words, s.labels)
 
 	for i := range labelings {
-		labelings[i].score = s.ScoreLabeling(&labelings[i])
+		labelings[i].Score = s.ScoreLabeling(&labelings[i])
 	}
 
 	return labelings
@@ -96,7 +96,7 @@ func calculateNormalizationConstant(labelings []CRFSentenceLabeling) float64 {
 	sum := float64(0)
 
 	for _, labeling := range labelings {
-		sum += labeling.score
+		sum += labeling.Score
 	}
 
 	return sum
@@ -108,13 +108,13 @@ func (s *CRFSentence) CalculateBestLabeling() CRFSentenceLabeling {
 	normalizationConstant := calculateNormalizationConstant(labelings)
 
 	for i := range labelings {
-		labelings[i].probability = labelings[i].score / normalizationConstant
+		labelings[i].Probability = labelings[i].Score / normalizationConstant
 	}
 
 	currentBestLabel := labelings[0]
 
 	for _, labeling := range labelings {
-		if labeling.probability > currentBestLabel.probability {
+		if labeling.Probability > currentBestLabel.Probability {
 			currentBestLabel = labeling
 		}
 	}
