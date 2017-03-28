@@ -1,5 +1,9 @@
 test:
-    post:
+    override:
+        - go vet
+        - go get -u github.com/jstemmer/go-junit-report
+        - mkdir -P $CIRCLE_TEST_REPORTS/junit
+        - go test -v | go-junit-report > $CIRCLE_TEST_REPORTS/junit/report.xml
         - mkdir -p $CIRCLE_ARTIFACTS/coverage
         - go test -covermode=count -coverprofile=$CIRCLE_ARTIFACTS/coverage.out
         - go tool cover -html=$CIRCLE_ARTIFACTS/coverage.out -o $CIRCLE_ARTIFACTS/coverage.html
