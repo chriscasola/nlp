@@ -60,14 +60,14 @@ func TestScoreLabeling(t *testing.T) {
 func TestGetAllPossibleLabelings(t *testing.T) {
 	result := getAllPossibleLabelings([]string{"the", "fat", "cat"}, []string{"a", "b"})
 	expected := []CRFSentenceLabeling{
-		CRFSentenceLabeling{Labels: []string{"a", "a", "a"}},
-		CRFSentenceLabeling{Labels: []string{"a", "a", "b"}},
-		CRFSentenceLabeling{Labels: []string{"a", "b", "a"}},
-		CRFSentenceLabeling{Labels: []string{"a", "b", "b"}},
-		CRFSentenceLabeling{Labels: []string{"b", "a", "a"}},
-		CRFSentenceLabeling{Labels: []string{"b", "a", "b"}},
-		CRFSentenceLabeling{Labels: []string{"b", "b", "a"}},
-		CRFSentenceLabeling{Labels: []string{"b", "b", "b"}},
+		{Labels: []string{"a", "a", "a"}},
+		{Labels: []string{"a", "a", "b"}},
+		{Labels: []string{"a", "b", "a"}},
+		{Labels: []string{"a", "b", "b"}},
+		{Labels: []string{"b", "a", "a"}},
+		{Labels: []string{"b", "a", "b"}},
+		{Labels: []string{"b", "b", "a"}},
+		{Labels: []string{"b", "b", "b"}},
 	}
 
 	if reflect.DeepEqual(result, expected) != true {
