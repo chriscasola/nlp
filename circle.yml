@@ -1,0 +1,6 @@
+test:
+    post:
+        - mkdir -p $CIRCLE_ARTIFACTS/coverage
+        - go test -covermode=count -coverprofile=$CIRCLE_ARTIFACTS/coverage.out
+        - go tool cover -html=$CIRCLE_ARTIFACTS/coverage.out -o $CIRCLE_ARTIFACTS/coverage.html
+        - go tool cover -func=$CIRCLE_ARTIFACTS/coverage.out -o $CIRCLE_ARTIFACTS/coverage.txt
