@@ -1,5 +1,6 @@
 # NLP
 
+[![CircleCI](https://circleci.com/gh/chriscasola/nlp.svg?style=svg)](https://circleci.com/gh/chriscasola/nlp)
 [![GoDoc](https://godoc.org/github.com/chriscasola/nlp?status.svg)](https://godoc.org/github.com/chriscasola/nlp)
 
 NLP is a go package meant to contain implementations of common natural language processing algorithms. So far there
