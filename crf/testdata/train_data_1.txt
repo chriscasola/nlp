@@ -1,0 +1,10 @@
+quantity unit name comment
+
+1/4 cup milk
+quantity unit name 
+
+3 large eggs
+quantity name name 
+
+5 peeled carrots
+quantity comment name
