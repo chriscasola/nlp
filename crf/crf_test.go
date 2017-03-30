@@ -1,4 +1,4 @@
-package nlp
+package crf
 
 import (
 	"math"
@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func featureFuncA(s []string, i int, labelCurr string, labelPrev string) bool {
+func featureFuncA(s []string, i int, labelCurr Label, labelPrev Label) bool {
 	if i%2 == 0 {
 		return true
 	}
@@ -16,7 +16,7 @@ func featureFuncA(s []string, i int, labelCurr string, labelPrev string) bool {
 	return false
 }
 
-func featureFuncB(s []string, i int, labelCurr string, labelPrev string) bool {
+func featureFuncB(s []string, i int, labelCurr Label, labelPrev Label) bool {
 	if strings.ToLower(s[i])[0] == 't' {
 		return true
 	}
@@ -24,7 +24,7 @@ func featureFuncB(s []string, i int, labelCurr string, labelPrev string) bool {
 	return false
 }
 
-func featureFuncC(s []string, i int, labelCurr string, labelPrev string) bool {
+func featureFuncC(s []string, i int, labelCurr Label, labelPrev Label) bool {
 	if labelCurr != labelPrev && labelPrev != "" {
 		return true
 	}
@@ -32,7 +32,7 @@ func featureFuncC(s []string, i int, labelCurr string, labelPrev string) bool {
 	return false
 }
 
-func featureFuncD(s []string, i int, labelCurr string, labelPrev string) bool {
+func featureFuncD(s []string, i int, labelCurr Label, labelPrev Label) bool {
 	if labelCurr == "B" && labelPrev == "A" {
 		return true
 	}
@@ -40,18 +40,18 @@ func featureFuncD(s []string, i int, labelCurr string, labelPrev string) bool {
 	return false
 }
 
-var featureA = CRFFeature{Weight: 0.25, Value: featureFuncA}
-var featureB = CRFFeature{Weight: 0.75, Value: featureFuncB}
-var featureC = CRFFeature{Weight: 0.75, Value: featureFuncC}
-var featureD = CRFFeature{Weight: 0.25, Value: featureFuncD}
+var featureA = Feature{Weight: 0.25, Value: featureFuncA}
+var featureB = Feature{Weight: 0.75, Value: featureFuncB}
+var featureC = Feature{Weight: 0.75, Value: featureFuncC}
+var featureD = Feature{Weight: 0.25, Value: featureFuncD}
 
 func TestScoreLabeling(t *testing.T) {
-	sentenceAFeatures := make([]CRFFeature, 0)
+	sentenceAFeatures := make([]Feature, 0)
 	sentenceAFeatures = append(sentenceAFeatures, featureA)
 	sentenceAFeatures = append(sentenceAFeatures, featureB)
 
-	sentenceA := MakeCRFSentence("This is a test sentence")
-	labelingA1 := CRFSentenceLabeling{Labels: []string{"A", "B", "A", "B", "A"}}
+	sentenceA := MakeSentence("This is a test sentence")
+	labelingA1 := SentenceLabeling{Labels: []Label{"A", "B", "A", "B", "A"}}
 
 	if score := sentenceA.ScoreLabeling(&labelingA1, sentenceAFeatures); score != math.Exp(2.25) {
 		t.Errorf("Score is %v but should be %v", score, math.Exp(2.25))
@@ -59,16 +59,16 @@ func TestScoreLabeling(t *testing.T) {
 }
 
 func TestGetAllPossibleLabelings(t *testing.T) {
-	result := getAllPossibleLabelings([]string{"the", "fat", "cat"}, []string{"a", "b"})
-	expected := []CRFSentenceLabeling{
-		{Labels: []string{"a", "a", "a"}},
-		{Labels: []string{"a", "a", "b"}},
-		{Labels: []string{"a", "b", "a"}},
-		{Labels: []string{"a", "b", "b"}},
-		{Labels: []string{"b", "a", "a"}},
-		{Labels: []string{"b", "a", "b"}},
-		{Labels: []string{"b", "b", "a"}},
-		{Labels: []string{"b", "b", "b"}},
+	result := getAllPossibleLabelings([]string{"the", "fat", "cat"}, []Label{"a", "b"})
+	expected := []SentenceLabeling{
+		{Labels: []Label{"a", "a", "a"}},
+		{Labels: []Label{"a", "a", "b"}},
+		{Labels: []Label{"a", "b", "a"}},
+		{Labels: []Label{"a", "b", "b"}},
+		{Labels: []Label{"b", "a", "a"}},
+		{Labels: []Label{"b", "a", "b"}},
+		{Labels: []Label{"b", "b", "a"}},
+		{Labels: []Label{"b", "b", "b"}},
 	}
 
 	if reflect.DeepEqual(result, expected) != true {
@@ -77,14 +77,14 @@ func TestGetAllPossibleLabelings(t *testing.T) {
 }
 
 func TestCalculateBestLabeling(t *testing.T) {
-	sentenceAFeatures := make([]CRFFeature, 0)
+	sentenceAFeatures := make([]Feature, 0)
 	sentenceAFeatures = append(sentenceAFeatures, featureC)
 	sentenceAFeatures = append(sentenceAFeatures, featureD)
 
-	sentenceA := MakeCRFSentence("This is a test sentence")
-	sentenceA.CalculateBestLabeling(sentenceAFeatures, []string{"A", "B"})
+	sentenceA := MakeSentence("This is a test sentence")
+	sentenceA.CalculateBestLabeling(sentenceAFeatures, []Label{"A", "B"})
 
-	expected := []string{"A", "B", "A", "B", "A"}
+	expected := []Label{"A", "B", "A", "B", "A"}
 	result := sentenceA.Labeling.Labels
 	if reflect.DeepEqual(result, expected) != true {
 		t.Errorf("Expected %v to be %v", result, expected)

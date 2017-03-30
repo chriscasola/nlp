@@ -1,4 +1,4 @@
-package nlp
+package crf
 
 import (
 	"math"
@@ -6,17 +6,20 @@ import (
 	"strings"
 )
 
-// CRFFeatureFunction is a feature function for linear-chain CRF
-type CRFFeatureFunction func(s []string, i int, labelCurr string, labelPrev string) bool
+// Label is a label applied to a word in a sentence
+type Label string
 
-// CRFFeature includes the weight and feature function for a CRF feature
-type CRFFeature struct {
+// FeatureFunction is a feature function for linear-chain CRF
+type FeatureFunction func(s []string, i int, labelCurr Label, labelPrev Label) bool
+
+// Feature includes the weight and feature function for a CRF feature
+type Feature struct {
 	Weight float64
-	Value  CRFFeatureFunction
+	Value  FeatureFunction
 }
 
 // EvaluateFeature evalutes the score of a given labeling using the feature function
-func (f *CRFFeature) EvaluateFeature(s []string, labeling *CRFSentenceLabeling) float64 {
+func (f *Feature) EvaluateFeature(s []string, labeling *SentenceLabeling) float64 {
 	score := float64(0)
 
 	for i := range s {
@@ -35,26 +38,26 @@ func (f *CRFFeature) EvaluateFeature(s []string, labeling *CRFSentenceLabeling) 
 	return score
 }
 
-// CRFSentenceLabeling is a specific order of labels for a sentence
-type CRFSentenceLabeling struct {
-	Labels      []string
+// SentenceLabeling is a specific order of labels for a sentence
+type SentenceLabeling struct {
+	Labels      []Label
 	Score       float64
 	Probability float64
 }
 
-// CRFSentence is a sentence to be processed using CRF
-type CRFSentence struct {
+// Sentence is a sentence to be processed using CRF
+type Sentence struct {
 	Words    []string
-	Labeling CRFSentenceLabeling
+	Labeling SentenceLabeling
 }
 
-// MakeCRFSentence makes a new CRFSentence with the given sentence and features
-func MakeCRFSentence(sentence string) *CRFSentence {
-	return &CRFSentence{Words: strings.Split(sentence, " ")}
+// MakeSentence makes a new Sentence with the given sentence and features
+func MakeSentence(sentence string) *Sentence {
+	return &Sentence{Words: strings.Split(sentence, " ")}
 }
 
 // ScoreLabeling determines the score of a given labeling of the sentence
-func (s *CRFSentence) ScoreLabeling(labeling *CRFSentenceLabeling, features []CRFFeature) float64 {
+func (s *Sentence) ScoreLabeling(labeling *SentenceLabeling, features []Feature) float64 {
 	score := float64(0)
 
 	for _, feature := range features {
@@ -64,10 +67,10 @@ func (s *CRFSentence) ScoreLabeling(labeling *CRFSentenceLabeling, features []CR
 	return math.Exp(score)
 }
 
-func recursivelyLabelWord(words []string, allLabels []string, appliedLabels []string) []CRFSentenceLabeling {
-	var result []CRFSentenceLabeling
+func recursivelyLabelWord(words []string, allLabels []Label, appliedLabels []Label) []SentenceLabeling {
+	var result []SentenceLabeling
 	if len(words) == len(appliedLabels) {
-		result = append(result, CRFSentenceLabeling{Labels: appliedLabels})
+		result = append(result, SentenceLabeling{Labels: appliedLabels})
 		return result
 	}
 
@@ -82,11 +85,11 @@ func recursivelyLabelWord(words []string, allLabels []string, appliedLabels []st
 	return result
 }
 
-func getAllPossibleLabelings(words []string, labels []string) []CRFSentenceLabeling {
-	var result []CRFSentenceLabeling
+func getAllPossibleLabelings(words []string, labels []Label) []SentenceLabeling {
+	var result []SentenceLabeling
 
 	for _, label := range labels {
-		restLabels := []string{label}
+		restLabels := []Label{label}
 		subResult := recursivelyLabelWord(words, labels, restLabels)
 		for _, r := range subResult {
 			result = append(result, r)
@@ -96,7 +99,7 @@ func getAllPossibleLabelings(words []string, labels []string) []CRFSentenceLabel
 	return result
 }
 
-func (s *CRFSentence) scoreAllLabelings(features []CRFFeature, labels []string) []CRFSentenceLabeling {
+func (s *Sentence) scoreAllLabelings(features []Feature, labels []Label) []SentenceLabeling {
 	labelings := getAllPossibleLabelings(s.Words, labels)
 
 	for i := range labelings {
@@ -106,7 +109,7 @@ func (s *CRFSentence) scoreAllLabelings(features []CRFFeature, labels []string) 
 	return labelings
 }
 
-func calculateNormalizationConstant(labelings []CRFSentenceLabeling) float64 {
+func calculateNormalizationConstant(labelings []SentenceLabeling) float64 {
 	sum := float64(0)
 
 	for _, labeling := range labelings {
@@ -116,7 +119,7 @@ func calculateNormalizationConstant(labelings []CRFSentenceLabeling) float64 {
 	return sum
 }
 
-func (s *CRFSentence) calculateLabelProbabilities(features []CRFFeature, labels []string) []CRFSentenceLabeling {
+func (s *Sentence) calculateLabelProbabilities(features []Feature, labels []Label) []SentenceLabeling {
 	labelings := s.scoreAllLabelings(features, labels)
 	normalizationConstant := calculateNormalizationConstant(labelings)
 
@@ -128,7 +131,7 @@ func (s *CRFSentence) calculateLabelProbabilities(features []CRFFeature, labels 
 }
 
 // CalculateBestLabeling determines the best labeling of the sentence
-func (s *CRFSentence) CalculateBestLabeling(features []CRFFeature, labels []string) {
+func (s *Sentence) CalculateBestLabeling(features []Feature, labels []Label) {
 	labelings := s.calculateLabelProbabilities(features, labels)
 
 	currentBestLabel := labelings[0]
@@ -144,7 +147,7 @@ func (s *CRFSentence) CalculateBestLabeling(features []CRFFeature, labels []stri
 
 // LearnWeights attempts to learn the weigh to use for each of the given feature functions
 // using the provided labels and training data
-func LearnWeights(features []CRFFeature, labels []string, trainingData []CRFSentence) {
+func LearnWeights(features []Feature, labels []Label, trainingData []Sentence) {
 	randomWeights := getRandomWeights(len(features))
 
 	// assign random weights to each feature function
