@@ -53,7 +53,7 @@ type Sentence struct {
 
 // MakeSentence makes a new Sentence with the given sentence and features
 func MakeSentence(sentence string) *Sentence {
-	return &Sentence{Words: strings.Split(sentence, " ")}
+	return &Sentence{Words: removeEmptyString(strings.Split(sentence, " "))}
 }
 
 // ScoreLabeling determines the score of a given labeling of the sentence
@@ -197,4 +197,17 @@ func getRandomWeights(num int) []float64 {
 	}
 
 	return randomNumbers
+}
+
+func removeEmptyString(arr []string) []string {
+	if arr == nil {
+		return arr
+	}
+	result := make([]string, 0)
+	for i := 0; i < len(arr); i++ {
+		if arr[i] != "" {
+			result = append(result, arr[i])
+		}
+	}
+	return result
 }

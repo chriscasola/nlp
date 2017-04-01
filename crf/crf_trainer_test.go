@@ -8,6 +8,7 @@ func TestLoadTrainingData(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
+		return
 	}
 
 	expectedLabels := []Label{"quantity", "unit", "name", "comment"}
@@ -24,5 +25,25 @@ func TestLoadTrainingData(t *testing.T) {
 
 	if reflect.DeepEqual(sentences, expectedSentences) != true {
 		t.Errorf("Expected %v to equal %v", sentences, expectedSentences)
+	}
+}
+
+func TestLoadTrainingDataWithErrors(t *testing.T) {
+	cases := map[string]string{
+		"./testdata/train_data_3.txt": "not enough labels (line 4)",
+		"./testdata/train_data_4.txt": "invalid label (line 4)",
+	}
+
+	for filePath, expectedError := range cases {
+		_, _, err := LoadTrainingData(filePath)
+
+		if err == nil {
+			t.Errorf("Expected error for bad training data")
+			return
+		}
+
+		if err.Error() != expectedError {
+			t.Errorf("Expected \"%v\" to be \"%v\"", err.Error(), expectedError)
+		}
 	}
 }

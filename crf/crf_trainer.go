@@ -27,12 +27,14 @@ func LoadTrainingData(filename string) ([]Label, []Sentence, error) {
 
 	defer file.Close()
 
+	lineNum := 0
 	result := make([]Sentence, 0)
 	labelSet := make([]Label, 0)
 	scanner := bufio.NewScanner(file)
 	var currentSentence *Sentence
 
 	if scanner.Scan() {
+		lineNum++
 		labels := strings.Split(scanner.Text(), " ")
 		for _, label := range labels {
 			if label != "" {
@@ -42,6 +44,7 @@ func LoadTrainingData(filename string) ([]Label, []Sentence, error) {
 	}
 
 	for scanner.Scan() {
+		lineNum++
 		line := scanner.Text()
 		if line == "" {
 			continue
@@ -50,9 +53,13 @@ func LoadTrainingData(filename string) ([]Label, []Sentence, error) {
 		if currentSentence == nil {
 			currentSentence = MakeSentence(line)
 		} else {
-			for _, label := range strings.Split(line, " ") {
-				if label == "" {
-					continue
+			sentenceLabels := removeEmptyString(strings.Split(line, " "))
+			if len(sentenceLabels) != len(currentSentence.Words) {
+				return nil, nil, fmt.Errorf("not enough labels (line %v)", lineNum)
+			}
+			for _, label := range sentenceLabels {
+				if !labelExists(labelSet, label) {
+					return nil, nil, fmt.Errorf("invalid label (line %v)", lineNum)
 				}
 				currentSentence.Labeling.Labels = append(currentSentence.Labeling.Labels, Label(label))
 			}
@@ -66,4 +73,13 @@ func LoadTrainingData(filename string) ([]Label, []Sentence, error) {
 	}
 
 	return labelSet, result, nil
+}
+
+func labelExists(labels []Label, label string) bool {
+	for i := 0; i < len(labels); i++ {
+		if string(labels[i]) == label {
+			return true
+		}
+	}
+	return false
 }
