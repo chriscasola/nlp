@@ -74,6 +74,23 @@ func TestGetAllPossibleLabelings(t *testing.T) {
 	if reflect.DeepEqual(result, expected) != true {
 		t.Errorf("Expected %v to be %v", result, expected)
 	}
+
+	result = getAllPossibleLabelings([]string{"the", "fat"}, []Label{"a", "b", "c"})
+	expected = []SentenceLabeling{
+		{Labels: []Label{"a", "a"}},
+		{Labels: []Label{"a", "b"}},
+		{Labels: []Label{"a", "c"}},
+		{Labels: []Label{"b", "a"}},
+		{Labels: []Label{"b", "b"}},
+		{Labels: []Label{"b", "c"}},
+		{Labels: []Label{"c", "a"}},
+		{Labels: []Label{"c", "b"}},
+		{Labels: []Label{"c", "c"}},
+	}
+
+	if reflect.DeepEqual(result, expected) != true {
+		t.Errorf("Expected %v to be %v", result, expected)
+	}
 }
 
 func TestCalculateBestLabeling(t *testing.T) {
@@ -107,4 +124,36 @@ func TestGetRandomWeights(t *testing.T) {
 	if sum != 1 {
 		t.Errorf("Expected %v to be 1", sum)
 	}
+}
+
+func QuantityAtBeginning(s []string, i int, labelCurr Label, labelPrev Label) bool {
+	if i == 0 && labelCurr == "quantity" {
+		return true
+	}
+
+	return false
+}
+
+func UnitAfterQuantity(s []string, i int, labelCurr Label, labelPrev Label) bool {
+	if labelPrev == "quantity" && labelCurr == "unit" {
+		return true
+	}
+
+	return false
+}
+
+func TestLearnWeights(t *testing.T) {
+	t.Skip("Skipping until performance can be improved")
+	features := []Feature{
+		Feature{Value: QuantityAtBeginning},
+		Feature{Value: UnitAfterQuantity},
+	}
+	labels, trainingData, err := LoadTrainingData("./testdata/train_data_2.txt")
+
+	if err != nil {
+		t.Errorf("Unexpected error reading test data file: %v", err)
+		return
+	}
+
+	LearnWeights(features, labels, trainingData)
 }

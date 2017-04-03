@@ -1,0 +1,223 @@
+quantity unit name comment separator other
+
+1/4 cup milk
+quantity unit name 
+
+3 large eggs
+quantity name name 
+
+5 peeled carrots
+quantity comment name
+
+2 tablespoon soy sauce
+quantity unit name name
+
+1 tablespoon dry sherry
+quantity unit name name
+
+1 dash sesame oil
+quantity unit name name
+
+2 tablespoon all-purpose flour
+quantity unit name name
+
+2 tablespoon cornstarch
+quantity unit name
+
+1/4 teaspoon baking powder
+quantity unit name name
+
+1/4 teaspoon baking soda
+quantity unit name name
+
+1 teaspoon canola oil
+quantity unit name name
+
+4 (5 ounce) skinless, boneless chicken breast halves, cut into 1-inch cubes
+quantity unit unit name name name name name comment comment comment comment
+
+1 quart vegetable oil for frying
+quantity unit name name comment comment
+
+1/2 cup water
+quantity unit name
+
+1 cup chicken broth
+quantity unit name name
+
+1/4 cup distilled white vinegar
+quantity unit name name name
+
+1/4 cup cornstarch
+quantity unit name
+
+1 teaspoon red chile paste (such as Thai Kitchen)
+quantity unit name name name comment comment comment comment
+
+1 clove garlic, minced
+quantity name name comment
+
+2 tablespoon toasted sesame seeds
+quantity unit comment name name
+
+3 zucchinis - ends trimmed, halved, and cut into 1/2-inch strips
+quantity name separator comment comment comment comment comment comment comment comment
+
+2 eggs, beaten
+quantity name comment
+
+cooking spray
+name name
+
+1/4 cup dry milk powder
+quantity unit name name name
+
+3 tablespoon white sugar
+quantity unit name name
+
+1 cup warm water (110 degrees F/45 degrees C)
+quantity unit comment name comment comment comment comment comment
+
+2 tablespoon butter, softened
+quantity unit name comment
+
+1 (.25 ounce) package active dry yeast
+quantity unit unit unit name name name
+
+1 egg white
+quantity name name
+
+1/4 cup all-purpose flour for coating
+quantity unit name name comment comment
+
+1/4 teaspoon ground black pepper
+quantity unit name name name
+
+1 tablespoon finely chopped Chinese chives
+quantity unit comment comment name name
+
+1 teaspoon chile-garlic sauce (such as Sriracha)
+quantity unit name name comment comment comment
+
+3 clove garlic, minced
+quantity unit name comment
+
+1 egg, beaten
+quantity name comment
+
+1 tablespoon minced fresh ginger
+quantity unit comment other name
+
+50 dumpling wrappers
+quantity name name
+
+1 cup vegetable oil for frying
+quantity unit name name comment comment
+
+1 quart water, or more as needed
+quantity unit name comment comment comment comment
+
+1 fresh jalapeno pepper, finely diced
+quantity other name name comment comment
+
+1 bunch asparagus, trimmed and cut into 1/4-inch pieces
+quantity unit name comment comment comment comment comment comment
+
+1 cup shelled fresh or thawed frozen peas
+quantity unit comment other other other name name
+
+2 tablespoon chopped fresh mint
+quantity unit comment other name
+
+salt and freshly ground black pepper to taste
+other other other other other other other other
+
+2 (4 ounce) filet mignon steaks
+quantity unit unit name name name
+
+1/2 teaspoon freshly ground black pepper to taste
+quantity unit comment comment name name comment comment
+
+salt to taste
+name comment comment
+
+1/4 cup dry red wine
+quantity unit name name name
+
+6 cup chicken broth, divided
+quantity unit name name comment
+
+3 tablespoon olive oil, divided
+quantity unit name name comment
+
+1 pound portobello mushrooms, thinly sliced
+quantity unit name name comment comment
+
+1 pound white mushrooms, thinly sliced
+quantity unit name name comment comment
+
+2 shallots, diced
+quantity name comment
+
+1 1/2 cup Arborio rice
+quantity quantity unit name name
+
+sea salt to taste
+name name comment comment
+
+freshly ground black pepper to taste
+comment comment name name comment comment
+
+3 tablespoon finely chopped chives
+quantity unit comment comment name
+
+4 tablespoon butter
+quantity unit name
+
+1/3 cup freshly grated Parmesan cheese
+quantity unit comment comment name name
+
+2 (14.5 ounce) cans Italian-style diced tomatoes
+quantity unit unit unit name name name
+
+1 (19 ounce) can cannellini beans, drained and rinsed
+quantity unit unit unit name name comment comment comment
+
+10 ounces fresh spinach, washed and chopped
+quantity unit other name comment comment comment
+
+8 ounces penne pasta
+quantity unit name name
+
+1/2 cup crumbled feta cheese
+quantity unit comment name name
+
+1 pound sweet Italian sausage, casings removed
+quantity unit name name name comment comment
+
+1 cup chopped onion
+quantity unit comment name
+
+2 clove garlic, minced
+quantity unit name comment
+
+5 cup beef broth
+quantity unit name name
+
+1/2 cup water
+quantity unit name
+
+4 large tomatoes - peeled, seeded and chopped
+quantity name name separator comment comment comment comment
+
+1 cup thinly sliced carrots
+quantity unit comment comment name
+
+1/2 tablespoon packed fresh basil leaves
+quantity unit unit other name name
+
+1/2 teaspoon dried oregano
+quantity unit other name
+
+1 1/2 cup sliced zucchini
+quantity quantity unit comment name

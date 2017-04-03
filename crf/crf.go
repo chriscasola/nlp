@@ -1,6 +1,7 @@
 package crf
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	"strings"
@@ -21,6 +22,10 @@ type Feature struct {
 // EvaluateFeature evalutes the score of a given labeling using the feature function
 func (f *Feature) EvaluateFeature(s []string, labeling *SentenceLabeling) float64 {
 	score := float64(0)
+
+	if len(s) != len(labeling.Labels) {
+		panic(fmt.Sprintf("Misaligned labels for \"%v\" labeled with \"%v\"\n", s, labeling.Labels))
+	}
 
 	for i := range s {
 		var val bool
@@ -145,7 +150,7 @@ func (s *Sentence) CalculateBestLabeling(features []Feature, labels []Label) {
 	s.Labeling = currentBestLabel
 }
 
-// LearnWeights attempts to learn the weigh to use for each of the given feature functions
+// LearnWeights attempts to learn the weight to use for each of the given feature functions
 // using the provided labels and training data
 func LearnWeights(features []Feature, labels []Label, trainingData []Sentence) {
 	randomWeights := getRandomWeights(len(features))
@@ -157,13 +162,14 @@ func LearnWeights(features []Feature, labels []Label, trainingData []Sentence) {
 
 	// loop through all of the training sentences
 	for i := 0; i < len(trainingData); i++ {
+		fmt.Printf("Analyzing sentence: %v\n", trainingData[i].Words)
 		const threshold = float64(0.01)
 		const learningRate = float64(1)
 		lastChange := float64(1)
 
 		// keep moving the weights until they coalesce on a value
 		for lastChange > threshold {
-			possibleLabelings := trainingData[i].calculateLabelProbabilities(features, labels)
+			possibleLabelings := getAllPossibleLabelings(trainingData[i].Words, labels)
 
 			// loop through each feature function and calculate the difference between the contribution
 			// of the feature function for the correct labeling and the contribution of the feature function
@@ -172,13 +178,13 @@ func LearnWeights(features []Feature, labels []Label, trainingData []Sentence) {
 				trueValue := features[j].EvaluateFeature(trainingData[i].Words, &trainingData[i].Labeling)
 				expectedContribution := float64(0)
 
-				for k := 0; k < len(possibleLabelings); i++ {
+				for k := 0; k < len(possibleLabelings); k++ {
 					expectedContribution += possibleLabelings[k].Probability * features[j].EvaluateFeature(trainingData[i].Words, &possibleLabelings[k])
 				}
 
 				// calculate gradient of the log probability of the training example
 				gradProb := trueValue - expectedContribution
-				lastChange := learningRate * gradProb
+				lastChange = learningRate * gradProb
 				features[j].Weight += lastChange
 			}
 		}
