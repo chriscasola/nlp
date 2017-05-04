@@ -9,6 +9,12 @@ mkdir -p .go_workspace/src/github.com/chriscasola/nlp
 cp -R nlp .go_workspace/src/github.com/chriscasola/
 cd .go_workspace/src/github.com/chriscasola/nlp
 go test -v ./... | go-junit-report > $CIRCLE_TEST_REPORTS/junit/report.xml
-go test -covermode=count -coverprofile=$CIRCLE_ARTIFACTS/coverage.out ./...
-go tool cover -html=$CIRCLE_ARTIFACTS/coverage.out -o $CIRCLE_ARTIFACTS/coverage.html
-go tool cover -func=$CIRCLE_ARTIFACTS/coverage.out -o $CIRCLE_ARTIFACTS/coverage.txt
+cd crf
+go test -covermode=count -coverprofile=$CIRCLE_ARTIFACTS/coverage_crf.out ./...
+go tool cover -html=$CIRCLE_ARTIFACTS/coverage_crf.out -o $CIRCLE_ARTIFACTS/coverage_crf.html
+go tool cover -func=$CIRCLE_ARTIFACTS/coverage_crf.out -o $CIRCLE_ARTIFACTS/coverage_crf.txt
+cd ../labelling
+go test -covermode=count -coverprofile=$CIRCLE_ARTIFACTS/coverage_labelling.out ./...
+go tool cover -html=$CIRCLE_ARTIFACTS/coverage_labelling.out -o $CIRCLE_ARTIFACTS/coverage_labelling.html
+go tool cover -func=$CIRCLE_ARTIFACTS/coverage_labelling.out -o $CIRCLE_ARTIFACTS/coverage_labelling.txt
+cd ..
